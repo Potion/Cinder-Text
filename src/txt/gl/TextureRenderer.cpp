@@ -20,7 +20,6 @@ namespace txt
 		#version 150
 
 		uniform mat4	ciModelViewProjection;
-		uniform float	time;
 
 		in vec4		ciPosition;
 		in vec2		ciTexCoord0;
@@ -29,21 +28,10 @@ namespace txt
 		out highp vec2 texCoord;
 		out vec4 globalColor;
 
-		vec4 rotateAroundZ( float angle, vec4 v )
-		{
-			 float sa = sin( angle );
-			 float ca = cos( angle );
-
-			 return vec4( ca*v.x - sa*v.y,
-							sa*v.x + ca*v.y,
-							v.z, v.w );
-		}
-
 		void main( void )
 		{
 			texCoord = ciTexCoord0;
 			globalColor = ciColor;
-			//vec4 rotatedPosition = rotateAroundZ( time, ciPosition );
 			gl_Position	= ciModelViewProjection * ciPosition;
 		}
 	)V0G0N";
@@ -165,7 +153,6 @@ namespace txt
 
 								//ci::gl::ScopedBlendAlpha alphaBlend;
 								mBatch->getGlslProg()->uniform( "uLayer", getCacheForFont( run.font ).glyphs[glyph.index].layer );
-								mBatch->getGlslProg()->uniform( "time", ( float )ci::app::getElapsedSeconds() );
 
 								ci::gl::Texture3dRef tex = getCacheForFont( run.font ).glyphs[glyph.index].texArray;
 
