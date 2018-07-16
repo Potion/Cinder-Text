@@ -22,6 +22,7 @@ namespace txt
 			TextBox& setColor( ci::ColorA color );
 			TextBox& setAlignment( Alignment alignment );
 
+			TextBox& enableRenderOnCurve( float curveRadius, ci::vec2 curveFboOffset );
 			TextBox& layoutIfNeeded();
 			TextBox& doLayout();
 

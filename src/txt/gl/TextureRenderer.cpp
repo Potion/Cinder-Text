@@ -81,6 +81,10 @@ namespace txt
 			if( mBatch == nullptr ) {
 				mBatch = ci::gl::Batch::create( ci::geom::Rect( ci::Rectf( 0.f, 0.f, 1.f, 1.f ) ), shader );
 			}
+
+			mRenderOnCurve = false;
+			mCurveRadius = 0.0f;
+			mCurveFboOffset = ci::vec2( 0.0f );
 		}
 
 		void TextureRenderer::setLayout( const Layout& layout )
@@ -93,6 +97,13 @@ namespace txt
 		ci::gl::TextureRef TextureRenderer::getTexture()
 		{
 			return mFbo->getColorTexture();
+		}
+
+		void TextureRenderer::enableRenderOnCurve( float curveRadius, ci::vec2 curveFboOffset )
+		{
+			mRenderOnCurve = true;
+			mCurveRadius = curveRadius;
+			mCurveFboOffset = curveFboOffset;
 		}
 
 		void TextureRenderer::allocateFbo( int size )
@@ -141,9 +152,16 @@ namespace txt
 							if( TextureRenderer::getCacheForFont( run.font ).glyphs.count( glyph.index ) != 0 ) {
 								ci::gl::ScopedMatrices matrices;
 
-								ci::gl::translate( ci::vec2( glyph.bbox.getUpperLeft() ) );
+								if( mRenderOnCurve ) {
+									ci::gl::translate( mCurveFboOffset );
+									ci::gl::rotate( -glyph.bbox.getUpperLeft().x / mCurveRadius, 0.0, 0.0f, 1.0f );
+									ci::gl::translate( ci::vec2( 0.0f, glyph.bbox.getUpperLeft().y + mCurveRadius ) );
+								}
+								else {
+									ci::gl::translate( ci::vec2( glyph.bbox.getUpperLeft() ) );
+								}
+
 								ci::gl::scale( glyph.bbox.getSize().x, glyph.bbox.getSize().y );
-								ci::gl::rotate( ci::app::getElapsedSeconds(), 0.0f, 0.0f, 1.0f );
 
 								//ci::gl::ScopedBlendAlpha alphaBlend;
 								mBatch->getGlslProg()->uniform( "uLayer", getCacheForFont( run.font ).glyphs[glyph.index].layer );

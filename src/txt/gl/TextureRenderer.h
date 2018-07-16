@@ -29,6 +29,8 @@ namespace txt
 
 				ci::gl::TextureRef getTexture();
 
+				void enableRenderOnCurve( float curveRadius, ci::vec2 curveFboOffset );
+
 			protected:
 
 
@@ -50,6 +52,9 @@ namespace txt
 				ci::gl::FboRef mFbo;
 
 				ci::gl::BatchRef mBatch;
+				bool mRenderOnCurve;
+				float mCurveRadius;
+				ci::vec2 mCurveFboOffset;
 
 				FontCache& getCacheForFont( const Font& font );
 				static void cacheFont( const Font& font );

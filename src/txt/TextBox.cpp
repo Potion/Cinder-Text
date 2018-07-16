@@ -68,6 +68,13 @@ namespace txt
 		return *this;
 	}
 
+	TextBox& TextBox::enableRenderOnCurve( float curveRadius, ci::vec2 curveFboOffset )
+	{
+		( std::dynamic_pointer_cast<txt::gl::TextureRenderer> )( mRenderer )->enableRenderOnCurve( curveRadius, curveFboOffset );
+
+		return *this;
+	}
+
 	TextBox& TextBox::layoutIfNeeded()
 	{
 		if( mNeedsLayout ) {
