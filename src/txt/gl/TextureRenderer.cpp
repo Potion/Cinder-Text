@@ -70,9 +70,9 @@ namespace txt
 				mBatch = ci::gl::Batch::create( ci::geom::Rect( ci::Rectf( 0.f, 0.f, 1.f, 1.f ) ), shader );
 			}
 
-			mRenderOnCurve = false;
-			mCurveRadius = 0.0f;
-			mCurveFboOffset = ci::vec2( 0.0f );
+			mRenderOnArc = false;
+			mArcRadius = 0.0f;
+			mArcFboOffset = ci::vec2( 0.0f );
 		}
 
 		void TextureRenderer::setLayout( const Layout& layout )
@@ -87,11 +87,11 @@ namespace txt
 			return mFbo->getColorTexture();
 		}
 
-		void TextureRenderer::enableRenderOnCurve( float curveRadius, ci::vec2 curveFboOffset )
+		void TextureRenderer::renderOnArc( float arcRadius, ci::vec2 arcFboOffset )
 		{
-			mRenderOnCurve = true;
-			mCurveRadius = curveRadius;
-			mCurveFboOffset = curveFboOffset;
+			mRenderOnArc = true;
+			mArcRadius = arcRadius;
+			mArcFboOffset = arcFboOffset;
 		}
 
 		void TextureRenderer::allocateFbo( int size )
@@ -140,10 +140,10 @@ namespace txt
 							if( TextureRenderer::getCacheForFont( run.font ).glyphs.count( glyph.index ) != 0 ) {
 								ci::gl::ScopedMatrices matrices;
 
-								if( mRenderOnCurve ) {
-									ci::gl::translate( mCurveFboOffset );
-									ci::gl::rotate( -glyph.bbox.getUpperLeft().x / mCurveRadius, 0.0, 0.0f, 1.0f );
-									ci::gl::translate( ci::vec2( 0.0f, glyph.bbox.getUpperLeft().y + mCurveRadius ) );
+								if( mRenderOnArc ) {
+									ci::gl::translate( mArcFboOffset );
+									ci::gl::rotate( -glyph.bbox.getUpperLeft().x / mArcRadius, 0.0, 0.0f, 1.0f );
+									ci::gl::translate( ci::vec2( 0.0f, glyph.bbox.getUpperLeft().y + mArcRadius ) );
 								}
 								else {
 									ci::gl::translate( ci::vec2( glyph.bbox.getUpperLeft() ) );

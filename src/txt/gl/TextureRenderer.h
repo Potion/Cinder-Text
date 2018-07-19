@@ -29,7 +29,7 @@ namespace txt
 
 				ci::gl::TextureRef getTexture();
 
-				void enableRenderOnCurve( float curveRadius, ci::vec2 curveFboOffset );
+				void renderOnArc( float arcRadius, ci::vec2 arcFboOffset );
 
 			protected:
 
@@ -52,9 +52,9 @@ namespace txt
 				ci::gl::FboRef mFbo;
 
 				ci::gl::BatchRef mBatch;
-				bool mRenderOnCurve;
-				float mCurveRadius;
-				ci::vec2 mCurveFboOffset;
+				bool mRenderOnArc;
+				float mArcRadius;
+				ci::vec2 mArcFboOffset;
 
 				FontCache& getCacheForFont( const Font& font );
 				static void cacheFont( const Font& font );
