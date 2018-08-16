@@ -13,7 +13,7 @@ namespace txt
 		const hb_tag_t KernTag = HB_TAG( 'k', 'e', 'r', 'n' ); // kerning operations
 		const hb_tag_t LigaTag = HB_TAG( 'l', 'i', 'g', 'a' ); // standard ligature substitution
 		const hb_tag_t CligTag = HB_TAG( 'c', 'l', 'i', 'g' ); // contextual ligature substitution
-		const hb_tag_t CaltTag = HB_TAG( 'c', 'a', 'l', 't' ); // contextual alternative
+		const hb_tag_t CaltTag = HB_TAG( 'c', 'a', 'l', 't' ); // contextual alternate
 
 
 		static hb_feature_t LigatureOff = { LigaTag, 0, 0, std::numeric_limits<unsigned int>::max() };

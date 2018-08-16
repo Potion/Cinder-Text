@@ -73,6 +73,7 @@ namespace txt
 		, mUseLigatures( true )
 		, mUseKerning( true )
 		, mUseClig( true )
+		, mUseCalt( true )
 		, mAlignment( Alignment::LEFT )
 		, mUseDefaultAlignment( true )
 		, mSize( GROW )
