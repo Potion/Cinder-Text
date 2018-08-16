@@ -73,6 +73,7 @@ namespace txt
 		, mUseLigatures( true )
 		, mUseKerning( true )
 		, mUseClig( true )
+		, mUseCalt( true )
 		, mAlignment( Alignment::LEFT )
 		, mUseDefaultAlignment( true )
 		, mSize( GROW )
@@ -255,6 +256,10 @@ namespace txt
 
 		if( !mUseClig ) {
 			shaper.removeFeature( txt::Shaper::Feature::CLIG );
+		}
+
+		if( !mUseCalt ) {
+			shaper.removeFeature( txt::Shaper::Feature::CALT );
 		}
 
 		Shaper::Text shaperText = {
