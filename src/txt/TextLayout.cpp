@@ -240,6 +240,17 @@ namespace txt
 		std::string paddedSubstring = substring.text + " ";
 		std::vector<uint8_t> lineBreaks;
 		ci::calcLinebreaksUtf8( paddedSubstring.c_str(), &lineBreaks );
+
+		//	TEMP: Fix to force a line break after hyphen only, not before
+		std::string hyphen = "-";
+
+		for( int i = 0; i < lineBreaks.size(); i++ ) {
+			if( paddedSubstring[i] == hyphen[0] && i < lineBreaks.size() - 2 ) {
+				lineBreaks[i] = lineBreaks[i + 1];
+			}
+		}
+
+
 		lineBreaks.pop_back();
 
 		// Shape the substring
