@@ -62,6 +62,7 @@ namespace txt
 	)V0G0N";
 
 		TextureRenderer::TextureRenderer()
+			: mOffset( ci::vec2() )
 		{
 			ci::gl::GlslProgRef shader = ci::gl::GlslProg::create( vertShader, fragShader );
 			shader->uniform( "uTexArray", 0 );
@@ -128,7 +129,7 @@ namespace txt
 							if( TextureRenderer::getCacheForFont( run.font ).glyphs.count( glyph.index ) != 0 ) {
 								ci::gl::ScopedMatrices matrices;
 
-								ci::gl::translate( ci::vec2( glyph.bbox.getUpperLeft() ) );
+								ci::gl::translate( ci::vec2( glyph.bbox.getUpperLeft() ) + mOffset );
 								ci::gl::scale( glyph.bbox.getSize().x, glyph.bbox.getSize().y );
 
 								//ci::gl::ScopedBlendAlpha alphaBlend;
