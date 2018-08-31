@@ -231,7 +231,7 @@ namespace txt
 
 	FTC_Scaler FontManager::getScaler( const  Font& font )
 	{
-		FTC_Scaler scaler = new FTC_ScalerRec_();
+		auto scaler = std::make_shared<FTC_ScalerRec_>();
 		scaler->face_id = ( FTC_FaceID )font.mFaceId;
 		scaler->pixel = 1;
 		scaler->width = float( font.mSize );
@@ -250,7 +250,7 @@ namespace txt
 		scaler->x_res = 96;
 		scaler->y_res = 96;
 
-		return scaler;
+		return scaler.get();
 	}
 
 	// This function gets called by the cache when a new face_id is requested
