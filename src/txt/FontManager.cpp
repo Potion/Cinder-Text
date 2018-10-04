@@ -131,7 +131,7 @@ namespace txt
 	{
 		FT_Size ftSize;
 		FT_Error error;
-		error = FTC_Manager_LookupSize( mFTCacheManager, getScaler( font ), &ftSize );
+		error = FTC_Manager_LookupSize( mFTCacheManager, ( FTC_Scaler ) &getScaler( font ), &ftSize );
 
 		std::stringstream errorMessage;
 		errorMessage << "Could not lookup size for face " << font.mFaceId << " at size " << std::to_string( font.mSize ) << ".";
@@ -179,7 +179,7 @@ namespace txt
 		//FT_Glyph glyph;
 		FT_Glyph glyph;
 		FT_Error error;
-		error = FTC_ImageCache_LookupScaler( mFTCImageCache, getScaler( font ), NULL, glyphIndex, ( FT_Glyph* )&glyph, NULL );
+		error = FTC_ImageCache_LookupScaler( mFTCImageCache, ( FTC_Scaler ) &getScaler( font ), NULL, glyphIndex, ( FT_Glyph* )&glyph, NULL );
 
 		std::stringstream errorMessage;
 		errorMessage << "Could not get glyph " << glyphIndex << " for face " << font.mFaceId << ".";
@@ -193,7 +193,7 @@ namespace txt
 		//FT_Glyph glyph;
 		FT_BitmapGlyph glyph;
 		FT_Error error;
-		error = FTC_ImageCache_LookupScaler( mFTCImageCache, getScaler( font ), FT_LOAD_RENDER | FT_RENDER_MODE_NORMAL, glyphIndex, ( FT_Glyph* )&glyph, NULL );
+		error = FTC_ImageCache_LookupScaler( mFTCImageCache, ( FTC_Scaler ) &getScaler( font ), FT_LOAD_RENDER | FT_RENDER_MODE_NORMAL, glyphIndex, ( FT_Glyph* )&glyph, NULL );
 
 		std::stringstream errorMessage;
 		errorMessage << "Could not get glyph " << glyphIndex << " for face " << font.mFaceId << ".";
@@ -229,28 +229,28 @@ namespace txt
 		//return ci::vec2( bbox.xMax - bbox.xMin, bbox.yMax - bbox.yMin );
 	}
 
-	FTC_Scaler FontManager::getScaler( const  Font& font )
+	FTC_ScalerRec_ FontManager::getScaler( const  Font& font )
 	{
-		auto scaler = std::make_shared<FTC_ScalerRec_>();
-		scaler->face_id = ( FTC_FaceID )font.mFaceId;
-		scaler->pixel = 1;
-		scaler->width = float( font.mSize );
-		scaler->height = float( font.mSize );
-
+		FTC_ScalerRec_ scaler = FTC_ScalerRec();
+		scaler.face_id = ( FTC_FaceID )font.mFaceId;
+		scaler.pixel = 1;
+		scaler.width = float( font.mSize );
+		scaler.height = float( font.mSize );
+		
 		double hPixelsPerInch, vPixelsPerInch;
 #ifdef CINDER_MSW
 		HDC screen = GetDC( NULL );
 		hPixelsPerInch = GetDeviceCaps( screen, LOGPIXELSX );
 		vPixelsPerInch = GetDeviceCaps( screen, LOGPIXELSY );
 		ReleaseDC( NULL, screen );
+#else
+		scaler.x_res = 96;
+		scaler.y_res = 96;
 #endif
-		scaler->x_res = hPixelsPerInch;
-		scaler->y_res = vPixelsPerInch;
+		scaler.x_res = hPixelsPerInch;
+		scaler.y_res = vPixelsPerInch;
 
-		scaler->x_res = 96;
-		scaler->y_res = 96;
-
-		return scaler.get();
+		return scaler;
 	}
 
 	// This function gets called by the cache when a new face_id is requested
