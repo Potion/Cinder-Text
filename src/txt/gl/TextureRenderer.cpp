@@ -5,6 +5,7 @@
 #include "cinder/GeomIo.h"
 #include "cinder/ip/Fill.h"
 #include "cinder/ip/Flip.h"
+#include "cinder/Log.h"
 
 #include "txt/FontManager.h"
 
@@ -86,6 +87,8 @@ namespace txt
 
 		void TextureRenderer::allocateFbo( int size )
 		{
+			
+
 			if( mFbo == nullptr || mFbo->getWidth() < size || mFbo->getHeight() < size ) {
 				// Go up by pow2 until we get the new size
 				int fboSize = 1;
@@ -102,7 +105,14 @@ namespace txt
 				//fboFormat.setColorTextureFormat( ci::gl::Texture2d::Format().internalFormat( GL_RGBA32F ) );
 				fboFormat.setColorTextureFormat( texFormat );
 
-				mFbo = ci::gl::Fbo::create( fboSize, fboSize, fboFormat );
+				GLint maxRenderBufferSize;
+				glGetIntegerv( GL_MAX_RENDERBUFFER_SIZE_EXT, &maxRenderBufferSize );
+				if( fboSize < maxRenderBufferSize ) {
+					mFbo = ci::gl::Fbo::create( fboSize, fboSize, fboFormat );
+				}
+				else {
+					CI_LOG_E( "Cannot allocate FBO, requested dimensions are bigger than maximum render buffer size." );
+				}
 			}
 		}
 
