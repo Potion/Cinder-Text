@@ -19,7 +19,8 @@ class TextboxApp : public App
 		void draw() override;
 
 		void textFileUpdated( const ci::WatchEvent& event );
-		std::string testTextFilename = "text/simplifiedChinese.txt";
+		//std::string testTextFilename = "text/simplifiedChinese.txt";
+		std::string testTextFilename = "text/english.txt";
 
 		txt::TextBox mTextBox;
 };
@@ -28,10 +29,10 @@ void TextboxApp::setup()
 {
 	//txt::Font font( loadAsset( "fonts/SourceSerifPro/SourceSerifPro-Regular.otf" ), 12 );
 	//txt::Font font( loadAsset( "fonts/NotoSans/NotoSans-Regular.ttf" ), 12 );
-	txt::Font font( loadAsset( "fonts/NotoChinese/NotoSansCJKsc-Medium.otf" ), 12 );
-	mTextBox.setSize( ci::vec2( 400, txt::GROW ) )
-	.setFont( txt::Font( "Arial", 11 ) )
-	.setFont( font );
+	//txt::Font font( loadAsset( "fonts/NotoChinese/NotoSansCJKsc-Medium.otf" ), 12 );
+	mTextBox.setSize( ci::vec2( 450, txt::GROW ) )
+	.setFont( txt::Font( "Arial", 12 ) );
+	//.setFont( font );
 
 	ci::FileWatcher::instance().watch( ci::app::getAssetPath( testTextFilename ), std::bind( &TextboxApp::textFileUpdated, this, std::placeholders::_1 ) );
 }
@@ -49,6 +50,7 @@ void TextboxApp::draw()
 	gl::clear( Color( 0, 0, 0 ) );
 	ci::gl::ScopedMatrices matrices;
 	ci::gl::translate( 100, 100 );
+	gl::color( 1.0, 0.0, 0.0);
 	mTextBox.draw();
 }
 
@@ -97,5 +99,5 @@ void TextboxApp::textFileUpdated( const ci::WatchEvent& watchEvent )
 
 CINDER_APP( TextboxApp, RendererGl, [&]( App::Settings* settings )
 {
-	settings->setHighDensityDisplayEnabled( true );
+	//settings->setHighDensityDisplayEnabled( true );
 } )

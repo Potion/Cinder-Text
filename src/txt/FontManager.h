@@ -116,7 +116,7 @@ namespace txt
 			FT_Face getFace( FTC_FaceID faceId );
 
 			FT_Size getSize( const Font& font );
-			FTC_Scaler getScaler( const Font& font );
+			FTC_ScalerRec_ getScaler( const Font& font );
 
 		protected:
 			FontManager();
