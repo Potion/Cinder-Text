@@ -3,8 +3,8 @@
 #include "cinder/gl/gl.h"
 
 #include "txt/TextLayout.h"
-#include "txt/TextRendererGl.h"
 #include "txt/AttributedString.h"
+#include "txt/gl/TextureRenderer.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -19,7 +19,7 @@ class AttributedStringApp : public App
 		void draw() override;
 
 		txt::Layout mLayout;
-		txt::RendererGl mRendererGl;
+		txt::gl::TextureRenderer mRenderer;
 
 		ci::Rectf mTextBox = ci::Rectf( 200.f, 200.f, 1000.f, 1000.f );
 		txt::AttributedString mAttrStr;
@@ -39,6 +39,7 @@ void AttributedStringApp::setup()
 
 	mLayout.setSize( mTextBox.getSize() );
 	mLayout.calculateLayout( mAttrStr );
+	mRenderer.setLayout( mLayout );
 }
 
 void AttributedStringApp::mouseDown( MouseEvent event )
@@ -46,6 +47,7 @@ void AttributedStringApp::mouseDown( MouseEvent event )
 	mTextBox.set( mTextBox.x1, mTextBox.y1, event.getX(), event.getY() );
 	mLayout.setSize( mTextBox.getSize() );
 	mLayout.calculateLayout( mAttrStr );
+	mRenderer.setLayout( mLayout );
 }
 
 void AttributedStringApp::update()
@@ -63,7 +65,8 @@ void AttributedStringApp::draw()
 	ci::gl::drawStrokedRect( ci::Rectf( ci::vec2( 0.f ), mTextBox.getSize() ) );
 
 	ci::gl::color( 1, 1, 1 );
-	mRendererGl.draw( mLayout );
+	//mRendererGl.draw( mLayout );
+	mRenderer.draw();
 }
 
 CINDER_APP( AttributedStringApp, RendererGl )
