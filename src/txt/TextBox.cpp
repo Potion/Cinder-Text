@@ -68,6 +68,14 @@ namespace txt
 		return *this;
 	}
 
+	TextBox& TextBox::setRenderFboSamples( int samples )
+	{
+		// TODO: insert return statement here
+		( std::dynamic_pointer_cast<txt::gl::TextureRenderer> )( mRenderer )->setFboSamples( samples );
+		mNeedsLayout = true;
+		return *this;
+	}
+
 	TextBox& TextBox::renderOnArc( float curveRadius, ci::vec2 curveFboOffset )
 	{
 		( std::dynamic_pointer_cast<txt::gl::TextureRenderer> )( mRenderer )->renderOnArc( curveRadius, curveFboOffset );

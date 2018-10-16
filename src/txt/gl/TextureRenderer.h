@@ -31,7 +31,7 @@ namespace txt
 				ci::gl::TextureRef getTexture();
 
 				void renderOnArc( float arcRadius, ci::vec2 arcFboOffset );
-
+				void setFboSamples( int samples ) { mFboSamples = samples; };
 			protected:
 
 
@@ -52,6 +52,7 @@ namespace txt
 				void renderToFbo();
 				void allocateFbo( int size );
 				ci::gl::FboRef mFbo;
+				int mFboSamples;
 
 				ci::gl::BatchRef mBatch;
 				bool mRenderOnArc;

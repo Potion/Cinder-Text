@@ -72,6 +72,7 @@ namespace txt
 				mBatch = ci::gl::Batch::create( ci::geom::Rect( ci::Rectf( 0.f, 0.f, 1.f, 1.f ) ), shader );
 			}
 
+			mFboSamples = 0;
 			mRenderOnArc = false;
 			mArcRadius = 0.0f;
 			mArcFboOffset = ci::vec2( 0.0f );
@@ -98,7 +99,7 @@ namespace txt
 
 		void TextureRenderer::allocateFbo( int size )
 		{
-			
+
 
 			if( mFbo == nullptr || mFbo->getWidth() < size || mFbo->getHeight() < size ) {
 				// Go up by pow2 until we get the new size
@@ -110,6 +111,7 @@ namespace txt
 
 				// Allocate
 				ci::gl::Fbo::Format fboFormat;
+				fboFormat.setSamples( mFboSamples );
 				ci::gl::Texture::Format texFormat;
 				texFormat.setMagFilter( GL_NEAREST );
 				texFormat.setMinFilter( GL_LINEAR );
@@ -118,6 +120,7 @@ namespace txt
 
 				GLint maxRenderBufferSize;
 				glGetIntegerv( GL_MAX_RENDERBUFFER_SIZE_EXT, &maxRenderBufferSize );
+
 				if( fboSize < maxRenderBufferSize ) {
 					mFbo = ci::gl::Fbo::create( fboSize, fboSize, fboFormat );
 				}
