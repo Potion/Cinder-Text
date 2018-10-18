@@ -112,11 +112,11 @@ namespace txt
 				// Allocate
 				ci::gl::Fbo::Format fboFormat;
 				fboFormat.setSamples( mFboSamples );
-				ci::gl::Texture::Format texFormat;
-				texFormat.setMagFilter( GL_NEAREST );
-				texFormat.setMinFilter( GL_LINEAR );
+				//ci::gl::Texture::Format texFormat;
+				//texFormat.setMagFilter( GL_NEAREST );
+				//texFormat.setMinFilter( GL_LINEAR );
 				//fboFormat.setColorTextureFormat( ci::gl::Texture2d::Format().internalFormat( GL_RGBA32F ) );
-				fboFormat.setColorTextureFormat( texFormat );
+				//fboFormat.setColorTextureFormat( texFormat );
 
 				GLint maxRenderBufferSize;
 				glGetIntegerv( GL_MAX_RENDERBUFFER_SIZE_EXT, &maxRenderBufferSize );
