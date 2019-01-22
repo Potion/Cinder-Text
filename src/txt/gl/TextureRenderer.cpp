@@ -87,7 +87,7 @@ namespace txt
 
 		void TextureRenderer::allocateFbo( int size )
 		{
-			
+
 
 			if( mFbo == nullptr || mFbo->getWidth() < size || mFbo->getHeight() < size ) {
 				// Go up by pow2 until we get the new size
@@ -107,6 +107,7 @@ namespace txt
 
 				GLint maxRenderBufferSize;
 				glGetIntegerv( GL_MAX_RENDERBUFFER_SIZE_EXT, &maxRenderBufferSize );
+
 				if( fboSize < maxRenderBufferSize ) {
 					mFbo = ci::gl::Fbo::create( fboSize, fboSize, fboFormat );
 				}
@@ -157,6 +158,56 @@ namespace txt
 								//ci::app::console() << "Could not find glyph for index: " << glyph.index << std::endl;
 							}
 						}
+					}
+				}
+			}
+		}
+
+		void TextureRenderer::renderPartialLayout( int firstIndex, int lastIndex, ci::gl::FboRef fbo, ci::vec2 fboOffset )
+		{
+			// Set viewport
+			ci::gl::ScopedViewport viewportScope( 0, 0, fbo->getWidth(), fbo->getHeight() );
+			ci::gl::ScopedMatrices matricesScope;
+			ci::gl::setMatricesWindow( fbo->getSize(), true );
+
+			// Draw text into FBO
+			ci::gl::ScopedFramebuffer fboScoped( fbo );
+			ci::gl::clear( ci::ColorA( 0.0, 0.0, 0.0, 0.0 ) );
+
+			ci::gl::ScopedBlendAlpha alpha;
+
+			int numGlyphs = 0;
+
+			for( auto& line : mLayout.getLines() ) {
+				for( auto& run : line.runs ) {
+					ci::gl::color( ci::ColorA( run.color, run.opacity ) );
+
+					for( auto& glyph : run.glyphs ) {
+						if( numGlyphs >= firstIndex && numGlyphs <= lastIndex ) {
+							// Make sure we have the glyph
+							if( TextureRenderer::getCacheForFont( run.font ).glyphs.count( glyph.index ) != 0 ) {
+								ci::gl::ScopedMatrices matrices;
+
+								ci::gl::translate( ci::vec2( glyph.bbox.getUpperLeft() ) + mOffset - fboOffset );
+								ci::gl::scale( glyph.bbox.getSize().x, glyph.bbox.getSize().y );
+
+								//ci::gl::ScopedBlendAlpha alphaBlend;
+								mBatch->getGlslProg()->uniform( "uLayer", getCacheForFont( run.font ).glyphs[glyph.index].layer );
+
+								ci::gl::Texture3dRef tex = getCacheForFont( run.font ).glyphs[glyph.index].texArray;
+
+								//ci::vec2 subTexSize = glyph.bbox.getSize() / ci::vec2( tex->getWidth(), tex->getHeight() );
+								mBatch->getGlslProg()->uniform( "uSubTexSize", getCacheForFont( run.font ).glyphs[glyph.index].subTexSize );
+
+								ci::gl::ScopedTextureBind texBind( tex, 0 );
+								mBatch->draw();
+							}
+							else {
+								//ci::app::console() << "Could not find glyph for index: " << glyph.index << std::endl;
+							}
+						}
+
+						numGlyphs++;
 					}
 				}
 			}

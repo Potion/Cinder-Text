@@ -29,6 +29,7 @@ namespace txt
 				static void unloadFont( const Font& font );
 
 				ci::gl::TextureRef getTexture();
+				void renderPartialLayout( int firstIndex, int lastIndex, ci::gl::FboRef fbo, ci::vec2 fboOffset );
 
 			protected:
 
