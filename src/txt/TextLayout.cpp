@@ -196,6 +196,9 @@ namespace txt
 			}
 		}
 
+		// record line height for attributed string
+		mLineHeight = lineHeight;
+
 		return lineHeight;
 	}
 
