@@ -73,7 +73,7 @@ namespace txt
 			// Layout Attributes
 			const Font& getFont() const { return mFont; }
 			Layout& setFont( const Font& font ) { mFont = font; return *this; }
-
+			float getLayoutFontSize() const { return mFontSize; }
 			const ci::Color& getColor() const { return mColor; }
 			Layout& setColor( const ci::Color& color ) { mColor = color; }
 
@@ -132,6 +132,7 @@ namespace txt
 			bool mUseDefaultAlignment;
 			txt::Unit mLineHeight;
 			txt::Unit mTracking;
+			float mFontSize; // will work for both attributed or default method
 
 			bool mUseLigatures;
 			bool mUseKerning;

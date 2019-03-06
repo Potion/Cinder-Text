@@ -131,6 +131,8 @@ namespace txt
 
 	void Layout::calculateLayout( std::string text )
 	{
+		// getting current font file size
+		mFontSize = mFont.getSize();
 		calculateLayout( AttributedString( text, mFont, mColor ) );
 	}
 
@@ -218,6 +220,7 @@ namespace txt
 		// Create a run for this substring
 		const Font runFont( substring.attributes.fontFamily, substring.attributes.fontStyle, substring.attributes.fontSize );
 		Run run( runFont, substring.attributes.color, substring.attributes.opacity );
+		mFontSize = runFont.getSize();
 
 		// Store the previous line height in case we need to abort and go to a new line
 		int prevLineHeight = mCurLineHeight;
