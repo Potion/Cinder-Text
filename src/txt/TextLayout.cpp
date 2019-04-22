@@ -1,4 +1,5 @@
 #include "txt/TextLayout.h"
+#include "cinder/Log.h"
 
 #include <string.h>
 
@@ -321,12 +322,30 @@ namespace txt
 			if( mSize.x != GROW && fabs( mCharPos ) > mSize.x ) {
 				BreakIndices breaks = getClosestBreakForShapedText( i, shapedGlyphs, lineBreaks, direction );
 
+				//	used to adjust the break index in certain cases
+				//	for example, when the break is not a space, or when the glyph has multiple text indices
+				int adjustGlyphEraseStartIndex = 0;
+
 				if( breaks.found ) {
 					// Clip the current run to the linebreak position
 					// and add to the current line
 					if( !run.glyphs.empty() ) {
-						run.glyphs.erase( run.glyphs.begin() + breaks.glyphBreakIndex, run.glyphs.end() );
+						//	if it's not whitespace, keep the character
+						if( shapedGlyphs[breaks.glyphBreakIndex].text != " " || isWhitespace( runFont, shapedGlyphs[breaks.glyphBreakIndex].index ) ) {
+							adjustGlyphEraseStartIndex = 1;
+						}
 
+						if( run.glyphs.size() < breaks.glyphBreakIndex + adjustGlyphEraseStartIndex ) {
+							adjustGlyphEraseStartIndex = 0;
+						}
+
+						//	see if this glyph is a multi-text-index glyph (e.g., em- and en-dashes)
+						if( shapedGlyphs[breaks.glyphBreakIndex + adjustGlyphEraseStartIndex].textIndices.size() > 1 ) {
+							breaks.textBreakIndex = shapedGlyphs[breaks.glyphBreakIndex + adjustGlyphEraseStartIndex].textIndices[0];
+						}
+
+
+						run.glyphs.erase( run.glyphs.begin() + breaks.glyphBreakIndex + adjustGlyphEraseStartIndex, run.glyphs.end() );
 						addRunToCurLine( run );
 						run.glyphs.clear();
 					}
@@ -509,6 +528,7 @@ namespace txt
 
 			// Unpack the glyph's cluster
 			for( int j = shapedGlyphs[i].textIndices.size() - 1; j >= 0; j-- ) {
+
 				// Look for allowed breaks
 				if( lineBreaks[shapedGlyphs[i].textIndices[j]] == ci::UNICODE_ALLOW_BREAK ) {
 					indices.textBreakIndex = shapedGlyphs[i].textIndices[j];
@@ -516,6 +536,7 @@ namespace txt
 					indices.found = true;
 					break;
 				}
+
 			}
 		}
 
