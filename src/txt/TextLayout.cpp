@@ -331,7 +331,7 @@ namespace txt
 					// and add to the current line
 					if( !run.glyphs.empty() ) {
 						//	if it's not whitespace, keep the character
-						if( shapedGlyphs[breaks.glyphBreakIndex].text != " " || isWhitespace( runFont, shapedGlyphs[breaks.glyphBreakIndex].index ) ) {
+						if( shapedGlyphs[breaks.glyphBreakIndex].text != " " || !isWhitespace( runFont, shapedGlyphs[breaks.glyphBreakIndex].index ) ) {
 							adjustGlyphEraseStartIndex = 1;
 						}
 
