@@ -133,7 +133,7 @@ namespace txt
 
 				for( auto& line : mLayout.getLines() ) {
 					for( auto& run : line.runs ) {
-						ci::gl::color( ci::ColorA( run.color, run.opacity ) );
+						ci::gl::ScopedColor color( ci::ColorA( run.color, run.opacity ) );
 
 						for( auto& glyph : run.glyphs ) {
 							// Make sure we have the glyph
