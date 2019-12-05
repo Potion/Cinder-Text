@@ -9,6 +9,7 @@
 
 #include "txt/FontManager.h"
 
+#define USE_FBO 0
 namespace txt
 {
 	namespace gl
@@ -76,8 +77,11 @@ namespace txt
 		void TextureRenderer::setLayout( const Layout& layout )
 		{
 			mLayout = layout;
+#if USE_FBO
+
 			allocateFbo( std::max( mLayout.measure().x, mLayout.measure().y ) );
 			renderToFbo();
+#endif 
 		}
 
 		ci::gl::TextureRef TextureRenderer::getTexture()
@@ -120,7 +124,7 @@ namespace txt
 
 		void TextureRenderer::renderToFbo()
 		{
-			return;
+#if USE_FBO
 
 			if( mFbo ) {
 				// Set viewport
@@ -164,6 +168,7 @@ namespace txt
 					}
 				}
 			}
+#endif
 		}
 
 		void TextureRenderer::renderPartialLayout( int firstIndex, int lastIndex, ci::gl::FboRef fbo, ci::vec2 fboOffset )
@@ -232,10 +237,13 @@ namespace txt
 
 		void TextureRenderer::draw()
 		{
+#if USE_FBO
 			//if( mFbo ) {
 			//	ci::gl::ScopedBlendPremult blend;
 			//	ci::gl::draw( mFbo->getColorTexture() );
 			//}
+
+#else
 			ci::gl::ScopedBlendAlpha alpha;
 
 			for( auto& line : mLayout.getLines() ) {
@@ -268,6 +276,7 @@ namespace txt
 					}
 				}
 			}
+#endif
 		}
 
 		void TextureRenderer::loadFont( const Font& font )
