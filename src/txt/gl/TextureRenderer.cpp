@@ -82,13 +82,14 @@ namespace txt
 
 		ci::gl::TextureRef TextureRenderer::getTexture()
 		{
+			return nullptr;
 			return mFbo->getColorTexture();
 		}
 
 		void TextureRenderer::allocateFbo( int size )
 		{
 
-
+			return;
 			if( mFbo == nullptr || mFbo->getWidth() < size || mFbo->getHeight() < size ) {
 				// Go up by pow2 until we get the new size
 				int fboSize = 1;
