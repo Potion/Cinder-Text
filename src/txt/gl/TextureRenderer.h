@@ -25,6 +25,8 @@ namespace txt
 				void setLayout( const txt::Layout& layout ) override;
 				void setOffset( ci::vec2 offset ) { mOffset = offset; }
 
+				void setDrawAlpha( float alpha ) { mDrawAlpha = alpha; };
+
 				static void loadFont( const Font& font );
 				static void unloadFont( const Font& font );
 
@@ -53,6 +55,7 @@ namespace txt
 				ci::gl::FboRef mFbo;
 
 				ci::gl::BatchRef mBatch;
+				float			 mDrawAlpha; // for drawing straight without fbo
 
 				FontCache& getCacheForFont( const Font& font );
 				static void cacheFont( const Font& font );

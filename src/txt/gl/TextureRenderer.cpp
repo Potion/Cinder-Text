@@ -119,6 +119,8 @@ namespace txt
 
 		void TextureRenderer::renderToFbo()
 		{
+			return;
+
 			if( mFbo ) {
 				// Set viewport
 				ci::gl::ScopedViewport viewportScope( 0, 0, mFbo->getWidth(), mFbo->getHeight() );
@@ -229,9 +231,41 @@ namespace txt
 
 		void TextureRenderer::draw()
 		{
-			if( mFbo ) {
-				ci::gl::ScopedBlendPremult blend;
-				ci::gl::draw( mFbo->getColorTexture() );
+			//if( mFbo ) {
+			//	ci::gl::ScopedBlendPremult blend;
+			//	ci::gl::draw( mFbo->getColorTexture() );
+			//}
+			ci::gl::ScopedBlendAlpha alpha;
+
+			for( auto& line : mLayout.getLines() ) {
+				for( auto& run : line.runs ) {
+					ci::gl::ScopedColor color( ci::ColorA( run.color, run.opacity ) );
+
+					for( auto& glyph : run.glyphs ) {
+						// Make sure we have the glyph
+						if( TextureRenderer::getCacheForFont( run.font ).glyphs.count( glyph.index ) != 0 ) {
+							ci::gl::ScopedMatrices matrices;
+
+							ci::gl::translate( ci::vec2( glyph.bbox.getUpperLeft() ) + mOffset );
+							ci::gl::scale( glyph.bbox.getSize().x, glyph.bbox.getSize().y );
+
+							//ci::gl::ScopedBlendAlpha alphaBlend;
+							mBatch->getGlslProg()->uniform( "uLayer", getCacheForFont( run.font ).glyphs[glyph.index].layer );
+
+							ci::gl::Texture3dRef tex = getCacheForFont( run.font ).glyphs[glyph.index].texArray;
+
+							//ci::vec2 subTexSize = glyph.bbox.getSize() / ci::vec2( tex->getWidth(), tex->getHeight() );
+							mBatch->getGlslProg()->uniform( "uSubTexSize", getCacheForFont( run.font ).glyphs[glyph.index].subTexSize );
+
+							ci::gl::ScopedColor color( 1, 1, 1, mDrawAlpha );
+							ci::gl::ScopedTextureBind texBind( tex, 0 );
+							mBatch->draw();
+						}
+						else {
+							//ci::app::console() << "Could not find glyph for index: " << glyph.index << std::endl;
+						}
+					}
+				}
 			}
 		}
 
