@@ -81,19 +81,21 @@ namespace txt
 
 			allocateFbo( std::max( mLayout.measure().x, mLayout.measure().y ) );
 			renderToFbo();
-#endif 
+#endif
 		}
 
 		ci::gl::TextureRef TextureRenderer::getTexture()
 		{
-			return nullptr;
+#if USE_FBO
+
 			return mFbo->getColorTexture();
+#endif
+			return nullptr;
 		}
 
 		void TextureRenderer::allocateFbo( int size )
 		{
 
-			return;
 			if( mFbo == nullptr || mFbo->getWidth() < size || mFbo->getHeight() < size ) {
 				// Go up by pow2 until we get the new size
 				int fboSize = 1;
@@ -168,6 +170,7 @@ namespace txt
 					}
 				}
 			}
+
 #endif
 		}
 
@@ -238,10 +241,11 @@ namespace txt
 		void TextureRenderer::draw()
 		{
 #if USE_FBO
-			//if( mFbo ) {
-			//	ci::gl::ScopedBlendPremult blend;
-			//	ci::gl::draw( mFbo->getColorTexture() );
-			//}
+
+			if( mFbo ) {
+				ci::gl::ScopedBlendPremult blend;
+				ci::gl::draw( mFbo->getColorTexture() );
+			}
 
 #else
 			ci::gl::ScopedBlendAlpha alpha;
@@ -276,6 +280,7 @@ namespace txt
 					}
 				}
 			}
+
 #endif
 		}
 
