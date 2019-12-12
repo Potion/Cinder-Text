@@ -9,7 +9,7 @@
 
 #include "txt/FontManager.h"
 
-#define USE_FBO 0
+#define USE_FBO 1
 namespace txt
 {
 	namespace gl
