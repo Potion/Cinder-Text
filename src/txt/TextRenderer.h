@@ -24,7 +24,7 @@ namespace txt
 			virtual void draw() = 0;
 
 			virtual void setLayout( const Layout& layout ) { mLayout = layout; }
-			virtual const Layout& getLayout( const Layout& layout ) { return mLayout; }
+			virtual const Layout& getLayout() { return mLayout; }
 
 		protected:
 			Layout mLayout;
